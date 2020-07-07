@@ -1,0 +1,447 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Calculadora_Binaria
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        int sw = 0;
+        private void EnterTextbox(object sender, KeyEventArgs e)
+        {
+            if(radDec.Checked == true)
+            {
+                try
+                {
+                    string E = txtEntrada.Text;
+
+                    if (e.KeyCode == Keys.Enter)
+                    {
+                        if (E.Contains("-"))
+                        {                            
+                            E = E.Substring(1);
+                            label3.Text = E;
+                            sw = 1;
+                        }
+
+                        txtRespuestaBinario.Text = Decimal_Binario(Convert.ToInt32(E));
+                        //Rangos
+                        int Rango = Convert.ToInt32(txtEntrada.Text);
+                        //Rangos
+                        if (Rango >= -8 && Rango <= 7)
+                        {
+                            txtNumBits.Text = "4";
+                            txtRangoSm.Text = " -8 al +7";
+                        }
+                        else if (Rango >= -128 && Rango <= 127)
+                        {
+                            txtNumBits.Text = "8";
+                            txtRangoSm.Text = " -128 al +127";
+                        }
+                        else if (Rango >= -32768 && Rango <= 32767)
+                        {
+                            txtNumBits.Text = "16";
+                            txtRangoSm.Text = " -32768 al +32767";
+                        }
+                    }                    
+                }
+                catch { }; 
+            }           
+        }
+
+        private void txtClave_TextChanged(object sender, EventArgs e)
+        {
+            string cadena = txtEntrada.Text;
+            pictureDiv.Visible = false;
+            PictureMas.Visible = false;
+            pictureMenos.Visible = false;
+            PicturePor.Visible = false;
+            try
+            {                
+                if (radioBinario.Checked == true)
+                {
+                    List<string> list = new List<string>();
+                    list.Add(cadena);
+                    string[] Cadenauno = list.ToArray();
+
+                    int c1 = BinarioADecimal(Cadenauno[0].ToString());
+                    txtRespuestaBinario.Text = cadena.ToString();
+                    txtResDecimal.Text = c1.ToString();                    
+
+                    //Rangos
+                    int Rango1 = Convert.ToInt32(txtResDecimal.Text);
+                    //Rangos
+                    if (Rango1 >= -8 && Rango1 <= 7)
+                    {
+                        txtNumBits.Text = "4";
+                        txtRangoSm.Text = " -8 al +7";
+                    }
+                    else if (Rango1 >= -128 && Rango1 <= 127)
+                    {
+                        txtNumBits.Text = "8";
+                        txtRangoSm.Text = " -128 al +127";
+                    }
+                    else if (Rango1 >= -32768 && Rango1 <= 32767)
+                    {
+                        txtNumBits.Text = "16";
+                        txtRangoSm.Text = " -32768 al +32767";
+                    }
+                }
+
+                string[] numeros = cadena.Split('+', '-', '*', '/');
+
+                int num1 = Convert.ToInt32(numeros[0].ToString());
+                int num2 = Convert.ToInt32(numeros[1].ToString());
+
+                if (cadena.Contains('+'))
+                {
+                    pictureDiv.Visible = false;
+                    PictureMas.Visible = true;
+                    pictureMenos.Visible = false;
+                    PicturePor.Visible = false;
+
+                    if (radDec.Checked == true)
+                    {
+                        int SumaD = num1 + num2;
+                        txtResDecimal.Text = SumaD.ToString();
+                        txtRespuestaBinario.Text = Decimal_Binario(SumaD);
+                        txtRes1.Text = Decimal_Binario(num1);
+                        txtRes2.Text = Decimal_Binario(num2);
+                    }
+
+                    if (radioBinario.Checked == true)
+                    {
+                        int n1 = BinarioADecimal(numeros[0].ToString());
+                        int n2 = BinarioADecimal(numeros[1].ToString());
+                        int Suma = n1 + n2;
+
+                        txtRes1.Text = n1.ToString();
+                        txtRes2.Text = n2.ToString();
+                        string SumaBinaria = Decimal_Binario(Suma);
+                        txtRespuestaBinario.Text = SumaBinaria.ToString();
+                        txtResDecimal.Text = Suma.ToString();
+                    }                   
+                }
+
+                if (cadena.Contains('-'))
+                {
+                    pictureDiv.Visible = false;
+                    PictureMas.Visible = false;
+                    pictureMenos.Visible = true;
+                    PicturePor.Visible = false;
+
+                    if (radDec.Checked == true)
+                    {
+                        int SumaD = num1 - num2;
+                        txtResDecimal.Text = SumaD.ToString();
+                        txtRespuestaBinario.Text = Decimal_Binario(SumaD);
+                        txtRes1.Text = Decimal_Binario(num1);
+                        txtRes2.Text = Decimal_Binario(num2);
+                    }
+
+                    if (radioBinario.Checked == true)
+                    {
+                        int n1 = BinarioADecimal(numeros[0].ToString());
+                        int n2 = BinarioADecimal(numeros[1].ToString());
+                        int Suma = n1 - n2;
+
+                        txtRes1.Text = n1.ToString();
+                        txtRes2.Text = n2.ToString();
+                        string SumaBinaria = Decimal_Binario(Suma);
+                        txtRespuestaBinario.Text = SumaBinaria.ToString();
+                        txtResDecimal.Text = Suma.ToString();
+                    }
+                }
+
+                if (cadena.Contains('*'))
+                {
+                    pictureDiv.Visible = false;
+                    PictureMas.Visible = false;
+                    pictureMenos.Visible = false;
+                    PicturePor.Visible = true;
+
+                    if (radDec.Checked == true)
+                    {
+                        int SumaD = num1 * num2;
+                        txtResDecimal.Text = SumaD.ToString();
+                        txtRespuestaBinario.Text = Decimal_Binario(SumaD);
+                        txtRes1.Text = Decimal_Binario(num1);
+                        txtRes2.Text = Decimal_Binario(num2);
+                    }
+
+                    if (radioBinario.Checked == true)
+                    {
+                        int n1 = BinarioADecimal(numeros[0].ToString());
+                        int n2 = BinarioADecimal(numeros[1].ToString());
+                        int Suma = n1 * n2;
+
+                        txtRes1.Text = n1.ToString();
+                        txtRes2.Text = n2.ToString();
+                        string SumaBinaria = Decimal_Binario(Suma);
+                        txtRespuestaBinario.Text = SumaBinaria.ToString();
+                        txtResDecimal.Text = Suma.ToString();
+                    }
+                }
+
+                if (cadena.Contains('/'))
+                {
+                    pictureDiv.Visible = true;
+                    PictureMas.Visible = false;
+                    pictureMenos.Visible = false;
+                    PicturePor.Visible = false;
+
+                    if (radDec.Checked == true)
+                    {
+                        int SumaD = num1 / num2;
+                        txtResDecimal.Text = SumaD.ToString();
+                        txtRespuestaBinario.Text = Decimal_Binario(SumaD);
+                        txtRes1.Text = Decimal_Binario(num1);
+                        txtRes2.Text = Decimal_Binario(num2);
+                    }
+
+                    if (radioBinario.Checked == true)
+                    {
+                        int n1 = BinarioADecimal(numeros[0].ToString());
+                        int n2 = BinarioADecimal(numeros[1].ToString());
+                        int Suma = n1 / n2;
+
+                        txtRes1.Text = n1.ToString();
+                        txtRes2.Text = n2.ToString();
+                        string SumaBinaria = Decimal_Binario(Suma);
+                        txtRespuestaBinario.Text = SumaBinaria.ToString();
+                        txtResDecimal.Text = Suma.ToString();
+                    }
+                }               
+
+                //Rangos
+                int Rango = Convert.ToInt32(txtResDecimal.Text);
+                //Rangos
+                if (Rango >= -8 && Rango <= 7)
+                {
+                    txtNumBits.Text = "4";
+                    txtRangoSm.Text = " -8 al +7";
+                }
+                else if (Rango >= -128 && Rango <= 127)
+                {
+                    txtNumBits.Text = "8";
+                    txtRangoSm.Text = " -128 al +127";
+                }
+                else if (Rango >= -32768 && Rango <= 32767)
+                {
+                    txtNumBits.Text = "16";
+                    txtRangoSm.Text = " -32768 al +32767";
+                }               
+            }
+            catch { };
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            txtEntrada.Text = txtEntrada.Text + "1";
+        }
+
+        private void txtEntrada_KeyPress(object sender, KeyPressEventArgs e)
+        {            
+        }
+        static int BinarioADecimal(string input)
+        {
+            char[] array = input.ToCharArray();
+            // Invertido pues los valores van incrementandose de derecha a izquierda: 16-8-4-2-1
+            Array.Reverse(array);
+            int sum = 0;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] == '1')
+                {
+                    // Usamos la potencia de 2, según la posición
+                    sum += (int)Math.Pow(2, i);
+                }
+            }
+            return sum;
+        }
+        public static String Decimal_Binario(int n)
+        {
+            string digito = Convert.ToString(n % 2);
+            if (n >= 2)
+            {
+                int resto = n / 2;
+                string restoString = Decimal_Binario(resto);
+                return restoString + digito;
+            }
+            return digito;
+        }
+        private void txtEntrada_Enter(object sender, EventArgs e)
+        {
+        }
+        private void Operaciones_SignoMagnitud()
+        {
+           
+        }
+        
+            private void txtEntrada_KeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel4_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel9_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+            pictureDiv.Visible = false;
+            PictureMas.Visible = false;
+            pictureMenos.Visible = false;
+            PicturePor.Visible = false;
+
+            txtEntrada.Clear();
+            txtRespuestaBinario.Clear();
+            txtResDecimal.Clear();
+            txtRes1.Clear();
+            txtRes2.Clear();
+
+            txtRangoSm.Clear();
+            txtNumBits.Clear();
+            txtSigMg.Clear();
+            txtCA1.Clear();
+            txtCA2.Clear();
+
+            txtEntrada.Focus();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            // Operaciones_SignoMagnitud();
+            string Cad = txtRespuestaBinario.Text;
+            List<string> Lista = new List<string>();
+            List<string> Lista2 = new List<string>();
+            List<string> Lista3 = new List<string>();
+            List<string> Lista4 = new List<string>();
+
+
+
+            for (int i = 0; i < Cad.Length; i++)
+            {
+                Lista.Add(Cad[i].ToString());
+            }
+            int Nceros = Convert.ToInt32(txtNumBits.Text) - Cad.Length;
+            txtCA1.Text = Nceros.ToString();
+
+            for (int i = 0; i < Nceros; i++)
+            {
+                Lista2.Add("0");
+                Lista3.Add("0");
+                Lista4.Add("0");
+            }
+
+            for (int i = 0; i < Cad.Length; i++)
+            {
+                Lista2.Add(Cad[i].ToString());
+                Lista3.Add(Cad[i].ToString());
+                Lista4.Add(Cad[i].ToString());
+            }
+
+            string en = txtEntrada.Text;
+
+            if (en.Contains("-")){
+                Lista3[0] = "1";
+                Lista4[0] = "1";
+
+                string SignoM = string.Join("", Lista3);
+                txtSigMg.Text = SignoM.ToString();
+
+                for (int i = 1; i < Lista2.Count; i++)
+                {
+                    if (Lista3[i] == "1")
+                    {
+                        Lista3[i] = "0";
+                    }
+                    else
+                        Lista3[i] = "1";
+                }
+
+                string CA1 = string.Join("", Lista3);
+                txtCA1.Text = CA1.ToString();
+
+
+                int posE = 0, NumE = 0, posi = 0;
+
+                for (int i = Lista4.Count - 1; i >= 0; i--)
+                {
+                    if (Lista4[i] == "1")
+                        posi = i;
+                    break;
+                }
+                //label14.Text = posi.ToString(); ver la posicion 
+
+                for (int i = posi - 1; i >= 0; i--)
+                {
+
+                    if (Lista4[i] == "0")
+                        Lista4[i] = "1";
+                    else
+                        Lista4[i] = "0";
+
+                    Lista4[0] = "1";
+                }
+
+
+                string CA2 = string.Join("", Lista4);
+                txtCA2.Text = CA2.ToString();
+                //txtCA2.Text = SignoM.ToString();
+            }
+            else
+            {
+                string SignoM = string.Join("", Lista2);
+                txtSigMg.Text = SignoM.ToString();
+                txtCA1.Text = SignoM.ToString();
+                txtCA2.Text = SignoM.ToString();
+            }           
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string bin = txtEntrada.Text;
+            bin = bin.Substring(1);
+
+            label3.Text = bin;
+        }
+    }
+}
